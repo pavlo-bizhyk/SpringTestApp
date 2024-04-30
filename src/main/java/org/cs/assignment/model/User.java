@@ -1,27 +1,51 @@
 package org.cs.assignment.model;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.util.Objects;
 
 @Entity
+@Table(name = "users")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false)
     private Long id;
-
+    @Column(nullable = false)
     private String email;
+    @Column(nullable = false)
     private String firstName;
+    @Column(nullable = false)
     private String lastName;
+    @Column(nullable = false)
     private LocalDate birthDate;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id", referencedColumnName = "id")
+    @Nullable
     private Address address;
-
+    @Nullable
     private String phoneNumber;
+
+    public User() {}
+
+    public User(Long id, String email, String firstName, String lastName, LocalDate birthDate) {
+        this.id = id;
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.birthDate = birthDate;
+    }
+
+    public User(String email, String firstName, String lastName, LocalDate birthDate) {
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.birthDate = birthDate;
+    }
 
     public Long getId() {
         return id;
