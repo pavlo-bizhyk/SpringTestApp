@@ -53,6 +53,10 @@ public class UserController {
 
         User user = userRepository.getUserById(id);
 
+        if (user == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User with such id does not exist");
+        }
+
         updateFields(user, userFieldsToPatch);
         userRepository.saveUser(user);
 
@@ -70,6 +74,10 @@ public class UserController {
         }
 
         User user = userRepository.getUserById(id);
+
+        if (user == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User with such id does not exist");
+        }
 
         updateFields(user, userFieldsToPatch);
         userRepository.saveUser(user);
@@ -106,13 +114,13 @@ public class UserController {
         return ResponseEntity.ok().body(userRepository.getUsersByDateRange(fromDate, toDate));
     }
 
-    private void updateFields(User user, User patchRequest) {
-        Field[] fields = patchRequest.getClass().getDeclaredFields();
+    private void updateFields(User user, User fieldsToUpdate) {
+        Field[] fields = fieldsToUpdate.getClass().getDeclaredFields();
         Arrays.stream(fields).forEach(field -> {
             try {
                 Field userField = user.getClass().getDeclaredField(field.getName());
                 field.setAccessible(true);
-                Object value = field.get(patchRequest);
+                Object value = field.get(fieldsToUpdate);
                 if (value != null) {
                     userField.setAccessible(true);
                     userField.set(user, value);

@@ -38,12 +38,7 @@ public class UserRepository {
     }
 
     public User getUserById(Long id) {
-        User user = entityManager.find(User.class, id);
-
-        if (user == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User with such id does not exist");
-        }
-        return user;
+        return entityManager.find(User.class, id);
     }
 
     public void deleteUserById(Long id) {
